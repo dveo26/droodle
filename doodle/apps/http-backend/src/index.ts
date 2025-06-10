@@ -5,7 +5,7 @@ import { middleware } from "./middleware";
 import { CreateUserSchema, SigninSchema, CreateRoomSchema } from "@repo/common/types";
 import { prismaClient } from "@repo/db/client";
 import cors from "cors";
-
+import bcrypt from "bcrypt";
 const app = express();
 app.use(express.json());
 app.use(cors())
@@ -21,11 +21,11 @@ app.post("/signup", async (req, res) => {
         return;
     }
     try {
+        const hashedPassword = await bcrypt.hash(parsedData.data.password, 10);
         const user = await prismaClient.user.create({
             data: {
                 email: parsedData.data?.username,
-                // TODO: Hash the pw
-                password: parsedData.data.password,
+                password: hashedPassword,
                 name: parsedData.data.name
             }
         })
@@ -48,11 +48,16 @@ app.post("/signin", async (req, res) => {
         return;
     }
 
-    // TODO: Compare the hashed pws here
+    const isMatch=await bcrypt.compare(parsedData.data.password, parsedData.data.password);
+    if (!isMatch) {
+        res.status(403).json({
+            message: "Incorrect password"
+        })
+        return;
+    }
     const user = await prismaClient.user.findFirst({
         where: {
             email: parsedData.data.username,
-            password: parsedData.data.password
         }
     })
 
@@ -114,7 +119,7 @@ app.get("/chats/:roomId", async (req, res) => {
             },
             take: 1000
         });
-
+        
         res.json({
             messages
         })

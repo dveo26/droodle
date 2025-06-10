@@ -75,12 +75,18 @@ importers:
       '@repo/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@types/bcrypt':
+        specifier: ^5.0.2
+        version: 5.0.2
       '@types/cors':
         specifier: ^2.8.17
         version: 2.8.17
       '@types/jsonwebtoken':
         specifier: ^9.0.7
         version: 9.0.7
+      bcrypt:
+        specifier: ^6.0.0
+        version: 6.0.0
       cors:
         specifier: ^2.8.5
         version: 2.8.5
@@ -146,9 +152,15 @@ importers:
       '@repo/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@types/bcrypt':
+        specifier: ^5.0.2
+        version: 5.0.2
       '@types/jsonwebtoken':
         specifier: ^9.0.7
         version: 9.0.7
+      bcrypt:
+        specifier: ^6.0.0
+        version: 6.0.0
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2
@@ -660,6 +672,9 @@ packages:
     resolution: {integrity: sha512-3uYg2b5TWCiupetbDFMbBFMHl33xQTvp5DNg0fZSYal73Z9AlFH9yWabHWMYw6ywmwM1evkYRpTVA2n7GgqT5A==}
     hasBin: true
 
+  '@types/bcrypt@5.0.2':
+    resolution: {integrity: sha512-6atioO8Y75fNcbmj0G7UjI9lXN2pQ/IGJ2FWT4a/btd0Lk9lQalHLKhkgKVZ3r+spnmWUKfbMi1GEe9wyHQfNQ==}
+
   '@types/body-parser@1.19.5':
     resolution: {integrity: sha512-fB3Zu92ucau0iQ0JMCFQE7b/dv8Ot07NI3KaZIkIUNXq82k4eBAqUaneXfleGY9JWskeS9y+u0nXMyspcuQrCg==}
 
@@ -960,6 +975,10 @@ packages:
   basic-ftp@5.0.5:
     resolution: {integrity: sha512-4Bcg1P8xhUuqcii/S0Z9wiHIrQVPMermM1any+MX5GeGD7faD3/msQUDGLol9wOcz4/jbg/WJnGqoJF6LiBdtg==}
     engines: {node: '>=10.0.0'}
+
+  bcrypt@6.0.0:
+    resolution: {integrity: sha512-cU8v/EGSrnH+HnxV2z0J7/blxH8gq7Xh2JFT6Aroax7UohdmiJJlxApMxtKfuI7z68NvvVcmR78k2LbT6efhRg==}
+    engines: {node: '>= 18'}
 
   binary-extensions@2.3.0:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
@@ -2167,6 +2186,14 @@ packages:
   no-case@2.3.2:
     resolution: {integrity: sha512-rmTZ9kz+f3rCvK2TD1Ue/oZlns7OGoIWP4fc3llxxRXlOkHKoWPPWJOfFYpITabSow43QJbRIoHQXtt10VldyQ==}
 
+  node-addon-api@8.3.1:
+    resolution: {integrity: sha512-lytcDEdxKjGJPTLEfW4mYMigRezMlyJY8W4wxJK8zE533Jlb8L8dRuObJFWg2P+AuOIxoCgKF+2Oq4d4Zd0OUA==}
+    engines: {node: ^18 || ^20 || >= 21}
+
+  node-gyp-build@4.8.4:
+    resolution: {integrity: sha512-LA4ZjwlnUblHVgq0oBF3Jl/6h/Nvs5fzBLwdEF4nuxnFdsfajde4WfxtJr3CaiH+F6ewcIB/q4jQ4UzPyid+CQ==}
+    hasBin: true
+
   node-plop@0.26.3:
     resolution: {integrity: sha512-Cov028YhBZ5aB7MdMWJEmwyBig43aGL5WT4vdoB28Oitau1zZAcHUn8Sgfk9HM33TqhtLJ9PlM/O0Mv+QpV/4Q==}
     engines: {node: '>=8.9.4'}
@@ -3325,6 +3352,10 @@ snapshots:
       semver: 7.6.3
       update-check: 1.5.4
 
+  '@types/bcrypt@5.0.2':
+    dependencies:
+      '@types/node': 20.17.6
+
   '@types/body-parser@1.19.5':
     dependencies:
       '@types/connect': 3.4.38
@@ -3685,6 +3716,11 @@ snapshots:
   base64-js@1.5.1: {}
 
   basic-ftp@5.0.5: {}
+
+  bcrypt@6.0.0:
+    dependencies:
+      node-addon-api: 8.3.1
+      node-gyp-build: 4.8.4
 
   binary-extensions@2.3.0: {}
 
@@ -4165,7 +4201,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.15.0(eslint@9.15.0(jiti@1.21.7))(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.15.0(jiti@1.21.7)):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.15.0(eslint@9.15.0(jiti@1.21.7))(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0)(eslint@9.15.0(jiti@1.21.7)))(eslint@9.15.0(jiti@1.21.7)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
@@ -4187,7 +4223,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.15.0(jiti@1.21.7)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.15.0(eslint@9.15.0(jiti@1.21.7))(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.15.0(jiti@1.21.7))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.15.0(eslint@9.15.0(jiti@1.21.7))(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0)(eslint@9.15.0(jiti@1.21.7)))(eslint@9.15.0(jiti@1.21.7))
       hasown: 2.0.2
       is-core-module: 2.15.1
       is-glob: 4.0.3
@@ -5103,6 +5139,10 @@ snapshots:
   no-case@2.3.2:
     dependencies:
       lower-case: 1.1.4
+
+  node-addon-api@8.3.1: {}
+
+  node-gyp-build@4.8.4: {}
 
   node-plop@0.26.3:
     dependencies:
