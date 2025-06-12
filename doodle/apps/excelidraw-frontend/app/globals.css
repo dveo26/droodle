@@ -4,26 +4,26 @@
 
 @layer base {
   :root {
-    --background: 0 0% 0%; /* #000000 */
+    --background: 210 11% 7%; /* #121212 */
     --foreground: 0 0% 100%;
-    --card: 0 0% 13%; /* #222222 */
+    --card: 210 6% 12%; /* #1E1E1E */
     --card-foreground: 0 0% 100%;
-    --popover: 0 0% 13%;
+    --popover: 210 6% 12%;
     --popover-foreground: 0 0% 100%;
-    --primary: 162 77% 46%; /* #1DCD9F */
+    --primary: 271 81% 56%; /* #9333EA */
     --primary-foreground: 0 0% 100%;
-    --secondary: 162 77% 35%; /* #169976 */
+    --secondary: 330 81% 60%; /* #EC4899 */
     --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 13%;
-    --muted-foreground: 0 0% 70%;
-    --accent: 162 77% 46%;
+    --accent: 188 86% 53%; /* #06B6D4 */
     --accent-foreground: 0 0% 100%;
+    --muted: 210 6% 12%;
+    --muted-foreground: 0 0% 70%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 13%;
-    --input: 0 0% 13%;
-    --ring: 162 77% 46%;
-    --radius: 0.5rem;
+    --border: 210 6% 20%; /* #333 */
+    --input: 210 6% 12%;
+    --ring: 271 81% 56%;
+    --radius: 0.75rem;
   }
 }
 
@@ -33,13 +33,14 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-color: #121212;
   }
 }
 
 /* Custom focus styles for better accessibility */
 @layer utilities {
   .focus-visible {
-    @apply focus:outline-none focus:ring-2 focus:ring-[#1DCD9F] focus:ring-offset-2 focus:ring-offset-black;
+    @apply focus:outline-none focus:ring-2 focus:ring-[#9333EA] focus:ring-offset-2 focus:ring-offset-[#121212];
   }
 }
 
@@ -48,19 +49,89 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Card hover effects */
-.card-hover:hover {
-  transform: translateY(-2px);
-  transition: all 0.2s ease-in-out;
-  box-shadow: 0 10px 25px rgba(29, 205, 159, 0.15);
+/* Custom animations */
+@keyframes fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Button gradient */
+@keyframes gradient-x {
+  0%,
+  100% {
+    background-size: 200% 200%;
+    background-position: left center;
+  }
+  50% {
+    background-size: 200% 200%;
+    background-position: right center;
+  }
+}
+
+.animate-fade-in-down {
+  animation: fade-in-down 1s ease-out;
+}
+
+.animate-gradient-x {
+  animation: gradient-x 3s ease infinite;
+  background-size: 200% 200%;
+}
+
+/* Card hover effects */
+.card-hover:hover {
+  transform: translateY(-2px) scale(1.02);
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 20px 40px rgba(147, 51, 234, 0.15);
+}
+
+/* Button gradient effects */
 .btn-gradient {
-  background: linear-gradient(90deg, #1dcd9f 0%, #169976 100%);
+  background: linear-gradient(90deg, #9333ea 0%, #ec4899 50%, #06b6d4 100%);
   transition: all 0.3s ease;
 }
 
 .btn-gradient:hover {
-  background: linear-gradient(90deg, #169976 0%, #1dcd9f 100%);
+  background: linear-gradient(90deg, #06b6d4 0%, #ec4899 50%, #9333ea 100%);
+  transform: scale(1.05);
+  box-shadow: 0 10px 30px rgba(147, 51, 234, 0.3);
+}
+
+/* Glow effects */
+.glow-purple {
+  box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
+}
+
+.glow-pink {
+  box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+}
+
+/* Text gradient utilities */
+.text-gradient-purple-pink {
+  background: linear-gradient(90deg, #9333ea 0%, #ec4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-pink-cyan {
+  background: linear-gradient(90deg, #ec4899 0%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-cyan-purple {
+  background: linear-gradient(90deg, #06b6d4 0%, #9333ea 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }

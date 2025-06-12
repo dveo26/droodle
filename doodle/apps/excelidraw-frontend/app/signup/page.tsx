@@ -30,7 +30,7 @@ export default function SignUpForm() {
 
       if (response.data.success) {
         // Redirect to dashboard or home page after successful signup
-        router.push("./dashboard");
+        router.push("./signin");
       } else {
         setError(
           response.data.message || "Something went wrong. Please try again."
@@ -118,13 +118,9 @@ export default function SignUpForm() {
             />
           </div>
 
-          <button
-            type="submit"
-            className="w-full btn btn-primary text-base py-3 rounded-xl disabled:opacity-50"
-            disabled={isLoading}
-          >
-            {isLoading ? "Signing up..." : "Sign Up"}
-          </button>
+          <Button variant="primary" size="lg" className="w-full">
+            Sign up
+          </Button>
         </form>
 
         <p className="mt-4 text-sm text-center text-muted-foreground">

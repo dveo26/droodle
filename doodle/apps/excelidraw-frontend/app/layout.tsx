@@ -56,7 +56,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <meta name="theme-color" content="#000000" />
+        <meta name="theme-color" content="#121212" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -90,7 +90,7 @@ export default function RootLayout({
       </head>
       <body
         className={`${inter.className} antialiased`}
-        style={{ backgroundColor: "#000000" }}
+        style={{ backgroundColor: "#121212" }}
       >
         {children}
       </body>
