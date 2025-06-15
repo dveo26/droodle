@@ -1,25 +1,21 @@
-// import axios from "axios";
-// import { BACKEND_URL } from "../../config";
+import { Metadata } from "next";
 
-// async function getRoomId(slug: string) {
-//     const response = await axios.get(`${BACKEND_URL}/room/${slug}`)
-//     console.log(response.data);
-//     return response.data.room.id;
-// }
+type Props = {
+  params: { slug: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
 
-export default async function({
-    params
-}: {
-    params: {
-        slug: string
-    }
-}) {
-    // const slug = (await params).slug;
-    // const roomId = await getRoomId(slug);
-    
-    // return <ChatRoom id={roomId}></ChatRoom>
-    return <div>
+export const metadata: Metadata = {
+  title: "Room",
+  description: "Chat room page",
+};
 
+export default function RoomPage({ params }: Props) {
+  const { slug } = params;
+
+  return (
+    <div>
+      <h1>Room: {slug}</h1>
     </div>
-
+  );
 }

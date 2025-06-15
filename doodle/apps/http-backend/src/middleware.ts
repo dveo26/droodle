@@ -34,7 +34,6 @@ export const middleware: RequestHandler = (
     const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
     console.log("Decoded token:", decoded);
 
-    // @ts-ignore
     req.userId = decoded.userId;
     next();
   } catch (err) {

@@ -1,12 +1,17 @@
+import { Metadata } from "next";
 import { RoomCanvas } from "@/components/RoomCanvas";
 
-export default async function CanvasPage({ params }: {
-    params: {
-        roomId: string
-    }
-}) {
-    const roomId = (await params).roomId;
+export const metadata: Metadata = {
+  title: "Canvas Room",
+  description: "Collaborative drawing canvas",
+};
 
-    return <RoomCanvas roomId={roomId} />
-   
+interface PageProps {
+  params: Promise<{ roomId: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export default async function CanvasPage({ params }: PageProps) {
+  const { roomId } = await params;
+  return <RoomCanvas roomId={roomId} />;
 }

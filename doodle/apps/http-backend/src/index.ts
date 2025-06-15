@@ -151,8 +151,15 @@ app.post("/room", middleware, async (req: Request, res: Response) => {
     });
     return;
   }
-  // @ts-ignore: TODO: Fix this
+
   const userId = req.userId;
+  if (!userId) {
+    res.status(401).json({
+      success: false,
+      message: "Unauthorized - No user ID found",
+    });
+    return;
+  }
 
   try {
     const room = await prismaClient.room.create({
@@ -226,7 +233,6 @@ app.get("/room/:slug", middleware, async (req: Request, res: Response) => {
 
 //user rooms endpoint
 app.get("/user/rooms", middleware, async (req: Request, res: Response) => {
-  // @ts-ignore: TODO: Fix this
   const userId = req.userId;
   try {
     const rooms = await prismaClient.room.findMany({

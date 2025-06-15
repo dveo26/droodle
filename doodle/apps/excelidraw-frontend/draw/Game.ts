@@ -153,7 +153,7 @@ export class Game {
         obj instanceof fabric.Circle ||
         obj instanceof fabric.Line
       ) {
-        obj.set("strokeWidth", scaledStrokeWidth);
+        (obj as fabric.Object).set({ strokeWidth: scaledStrokeWidth });
       }
     });
     this.fabricCanvas.requestRenderAll();
