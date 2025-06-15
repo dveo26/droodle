@@ -27,11 +27,14 @@ export default function SignInForm() {
         toast.error("Failed to sign in");
       }
       const data = response.data;
+      
+      console.log("Sign in successful:", data);
       toast.success("Sign in successful:", data);
       // Redirect to dashboard or home page after successful sign in
       router.push("/dashboard");
     } catch (error) {
-      console.error("Error signing in:", error);
+      toast.error("Error signing in. Please try again.");
+      console.error("Sign in error:", error);
     }
   };
 

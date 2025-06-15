@@ -1,7 +1,6 @@
 "use client";
 
 import { WS_URL } from "@/config";
-import { initDraw } from "@/draw";
 import { useEffect, useRef, useState } from "react";
 import { Canvas } from "./Canvas";
 
@@ -9,9 +8,9 @@ export function RoomCanvas({ roomId }: { roomId: string }) {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [isConnecting, setIsConnecting] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const canvasContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Get token from localStorage
     const token = localStorage.getItem("token");
     console.log("Connecting to WebSocket with token:", token);
     if (!token) {
@@ -47,7 +46,6 @@ export function RoomCanvas({ roomId }: { roomId: string }) {
       setSocket(null);
       setIsConnecting(false);
 
-      // Handle different close codes
       if (event.code === 1006) {
         setError("Connection lost. Please refresh the page.");
       } else if (event.code === 1000) {
@@ -57,7 +55,6 @@ export function RoomCanvas({ roomId }: { roomId: string }) {
       }
     };
 
-    // Cleanup function
     return () => {
       if (ws.readyState === WebSocket.OPEN) {
         ws.close();
@@ -103,7 +100,7 @@ export function RoomCanvas({ roomId }: { roomId: string }) {
   }
 
   return (
-    <div>
+    <div ref={canvasContainerRef} className="h-full w-full">
       <Canvas roomId={roomId} socket={socket} />
     </div>
   );

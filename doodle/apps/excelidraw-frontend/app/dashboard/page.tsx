@@ -3,8 +3,11 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import api from "@/components/api";
-import { toast ,ToastContainer} from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { Button } from "@repo/ui/button";
+import { Plus, Users, ArrowRight, LayoutGrid } from "lucide-react";
+import { Card } from "@repo/ui/card";
+
 interface Room {
   id: string;
   slug: string;
@@ -78,10 +81,15 @@ export default function DashboardPage() {
         "response" in err &&
         err.response &&
         typeof err.response === "object" &&
-        "data" in err.response
+        "data" in err.response &&
+        err.response.data &&
+        typeof err.response.data === "object" &&
+        "message" in err.response.data
       ) {
-        // @ts-expect-error: err is typed as unknown but we expect it to have a response property here
-        toast.error(err.response.data?.message || "Failed to create room");
+        toast.error(
+          (err.response.data as { message: string }).message ||
+            "Failed to create room"
+        );
       } else {
         toast.error("Failed to create room");
       }
@@ -113,74 +121,127 @@ export default function DashboardPage() {
     }
   };
 
+  const formatRoomId = (id: string) => {
+    return id.length > 8 ? `${id.substring(0, 8)}...` : id;
+  };
+
   return (
     <>
-      <div className="max-w- mx-auto text-white py-24 bg-gradient-to-r from-primary/20 via-transparent to-primary/10">
-      <div className="text-center max-w-3xl mx-auto">
-              <h1 className="text-6xl sm:text-5xl font-extrabold leading-tight tracking-tight drop-shadow-sm">
-                User
-                <span className="text-primary block drop-shadow-[0_0_12px_rgba()]">
-                  Dashboard
-                </span>
+      <div className="min-h-screen bg-gradient-to-br from-background via-muted/40 to-background">
+        {/* Header */}
+        <div className="relative overflow-hidden bg-gradient-to-b from-primary/10 to-transparent">
+          <div className="container mx-auto px-4 py-16 sm:px-6 lg:px-8">
+            <div className="text-center max-w-3xl mx-auto">
+              <h1 className="text-4xl sm:text-5xl font-extrabold leading-tight tracking-tight">
+                Welcome to Your
+                <span className="text-primary block mt-2">Drawing Space</span>
               </h1>
-</div>
-        {/* Create Room */}
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold">Create Room</h2>
-          <input
-            className="w-full p-2 mt-2 rounded bg-gray-800 text-white border border-gray-600"
-            placeholder="Room name"
-            value={roomName}
-            onChange={(e) => setRoomName(e.target.value)}
-          />
-          <div className="px-2 py-4">
-            <Button
-              variant="primary"
-              onClick={createRoom}
-              size="lg"
-              className="px-4 py-2 rounded"
-            >
-              Create
-            </Button>
+              <p className="mt-4 text-lg text-muted-foreground">
+                Create new rooms or join existing ones to start collaborating
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Join Room */}
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold">Join Room by Slug</h2>
-          <input
-            className="w-full p-2 mt-2 rounded bg-gray-800 text-white border border-gray-600"
-            placeholder="Room slug"
-            value={roomSlug}
-            onChange={(e) => setRoomSlug(e.target.value)}
-          />
-          <div className="px-2 py-4">
-            <Button
-              variant="outline"
-              size="lg"
-              onClick={joinRoom}
-              className=" px-4 py-2 rounded"
-            >
-              Join
-            </Button>
-          </div>
-        </div>
+        {/* Main Content */}
+        <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Create Room Section */}
+            <Card className="p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <Plus className="h-5 w-5 text-primary" />
+                </div>
+                <h2 className="text-xl font-semibold">Create New Room</h2>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-muted-foreground mb-2">
+                    Room Name
+                  </label>
+                  <input
+                    className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground focus:ring-2 focus:ring-primary focus:outline-none transition-all"
+                    placeholder="Enter room name"
+                    value={roomName}
+                    onChange={(e) => setRoomName(e.target.value)}
+                  />
+                </div>
+                <Button
+                  variant="primary"
+                  onClick={createRoom}
+                  size="lg"
+                  className="w-full"
+                >
+                  Create Room
+                </Button>
+              </div>
+            </Card>
 
-        {/* User Rooms */}
-        <div>
-          <h2 className="text-xl font-semibold">Your Created Rooms</h2>
-          <ul className="mt-4 space-y-2">
-            {rooms.map((room) => (
-              <li key={room.id}>
-                <button
-                  className="w-full text-left bg-gray-700 p-2 rounded hover:bg-gray-600"
+            {/* Join Room Section */}
+            <Card className="p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <Users className="h-5 w-5 text-primary" />
+                </div>
+                <h2 className="text-xl font-semibold">Join Room</h2>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-muted-foreground mb-2">
+                    Room Code
+                  </label>
+                  <input
+                    className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground focus:ring-2 focus:ring-primary focus:outline-none transition-all"
+                    placeholder="Enter room code"
+                    value={roomSlug}
+                    onChange={(e) => setRoomSlug(e.target.value)}
+                  />
+                </div>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={joinRoom}
+                  className="w-full"
+                >
+                  Join Room
+                </Button>
+              </div>
+            </Card>
+          </div>
+
+          {/* Your Rooms Section */}
+          <div className="mt-12">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 rounded-lg bg-primary/10">
+                <LayoutGrid className="h-5 w-5 text-primary" />
+              </div>
+              <h2 className="text-xl font-semibold">Your Rooms</h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {rooms.map((room) => (
+                <div
+                  key={room.id}
+                  className="p-4 hover:bg-muted/50 transition-colors cursor-pointer rounded-lg border border-border bg-card"
                   onClick={() => router.push(`/canvas/${room.id}`)}
                 >
-                  {room.slug} (ID: {room.id})
-                </button>
-              </li>
-            ))}
-          </ul>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="font-medium">{room.slug}</h3>
+                      <p className="text-sm text-muted-foreground">
+                        ID: {formatRoomId(room.id)}
+                      </p>
+                    </div>
+                    <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                  </div>
+                </div>
+              ))}
+              {rooms.length === 0 && (
+                <div className="col-span-full text-center py-8 text-muted-foreground">
+                  No rooms created yet. Create your first room to get started!
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
       <ToastContainer

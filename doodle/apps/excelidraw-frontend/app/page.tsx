@@ -2,13 +2,7 @@
 
 import { Button } from "@repo/ui/button";
 import { Card } from "@repo/ui/card";
-import {
-  Share2,
-  Users2,
-  Sparkles,
-  Github,
-  Download,
-} from "lucide-react";
+import { Share2, Users2, Sparkles, Github, Download } from "lucide-react";
 import Link from "next/link";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -71,37 +65,38 @@ function App() {
 
         {/* Features Section */}
         <div className="px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
-          {[
-            {
-              title: "Real-time Collaboration",
-              description:
-                "Work together with your team in real-time. Share your drawings instantly with a simple link.",
-              icon: <Share2 className="h-6 w-6 text-primary" />
-            },
-            {
-              title: "Multiplayer Editing",
-              description:
-                "Multiple users can edit the same canvas simultaneously. See who's drawing what in real-time.",
-              icon: <Users2 className="h-6 w-6 text-primary" />
-            },
-            {
-              title: "Smart Drawing",
-              description:
-                "Intelligent shape recognition and drawing assistance helps you create perfect diagrams.",
-              icon: <Sparkles className="h-6 w-6 text-primary" />
-              
-            },
-          ].map((item, index) => (
-            <Card key={index} title={item.title} >
-              <div className="flex items-center gap-4 mb-4">
-                <div className="p-2 rounded-lg bg-primary/10">{item.icon}</div>
-              </div>
-              <p>{item.description}</p>
-            </Card>
-          ))}
+          <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              {
+                title: "Real-time Collaboration",
+                description:
+                  "Work together with your team in real-time. Share your drawings instantly with a simple link.",
+                icon: <Share2 className="h-6 w-6 text-primary" />,
+              },
+              {
+                title: "Multiplayer Editing",
+                description:
+                  "Multiple users can edit the same canvas simultaneously. See who's drawing what in real-time.",
+                icon: <Users2 className="h-6 w-6 text-primary" />,
+              },
+              {
+                title: "Smart Drawing",
+                description:
+                  "Intelligent shape recognition and drawing assistance helps you create perfect diagrams.",
+                icon: <Sparkles className="h-6 w-6 text-primary" />,
+              },
+            ].map((item, index) => (
+              <Card key={index} title={item.title}>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    {item.icon}
+                  </div>
+                </div>
+                <p>{item.description}</p>
+              </Card>
+            ))}
           </div>
-          </div>
+        </div>
 
         {/* CTA Section */}
         <section className="py-24 bg-gradient-to-r from-primary/20 via-transparent to-primary/10">
@@ -123,7 +118,6 @@ function App() {
                     onClick={handleOpenCanvas}
                   >
                     Open Canvas
-                    
                   </Button>
                   <Button
                     variant="outline"
