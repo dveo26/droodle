@@ -22,20 +22,65 @@ export default function SignInForm() {
     console.log("Signing in with:", formData);
     try {
       const response = await api.post("/signin", formData);
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+
+      console.log("Signin response:", response.data);
+
       if (response.status < 200 || response.status >= 300) {
         toast.error("Failed to sign in");
+        return;
       }
+
+      // Check if response has the expected data
+      if (!response.data.token) {
+        console.error("Unexpected response format:", response.data);
+        toast.error("Invalid response from server");
+        return;
+      }
+
+      // Handle both userId and user object formats
+      let userData;
+      if (response.data.user) {
+        // New format with user object
+        userData = response.data.user;
+      } else if (response.data.userId) {
+        // Old format with userId - create a minimal user object
+        userData = {
+          id: response.data.userId,
+          email: formData.email, // Use the email from the form
+          name: "User", // Default name since we don't have it
+        };
+      } else {
+        console.error("No user data found in response:", response.data);
+        toast.error("Invalid response from server");
+        return;
+      }
+
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(userData));
+
       const data = response.data;
 
       console.log("Sign in successful:", data);
-      toast.success("Sign in successful:", data);
+      toast.success("Sign in successful!");
 
       router.push("/dashboard");
-    } catch (error) {
-      toast.error("Error signing in. Please try again.");
+    } catch (error: any) {
       console.error("Sign in error:", error);
+
+      if (error.response) {
+        // Server responded with error status
+        console.error("Error response:", error.response.data);
+        toast.error(
+          error.response.data.message || "Error signing in. Please try again."
+        );
+      } else if (error.request) {
+        // Network error
+        console.error("Network error:", error.request);
+        toast.error("Network error. Please check your connection.");
+      } else {
+        // Other error
+        toast.error("Error signing in. Please try again.");
+      }
     }
   };
 

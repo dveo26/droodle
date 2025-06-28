@@ -28,27 +28,73 @@ export default function SignUpForm() {
     }
 
     try {
+      console.log("Attempting signup with:", {
+        name: formData.name,
+        email: formData.email,
+      });
+
       const response = await api.post("/signup", {
         name: formData.name,
         email: formData.email,
         password: formData.password,
       });
 
+      console.log("Signup response:", response.data);
+
       if (response.status < 200 || response.status >= 300) {
         toast.error("Failed to sign up");
         return;
       }
 
+      // Check if response has the expected data
+      if (!response.data.token) {
+        console.error("Unexpected response format:", response.data);
+        toast.error("Invalid response from server");
+        return;
+      }
+
+      // Handle both userId and user object formats
+      let userData;
+      if (response.data.user) {
+        // New format with user object
+        userData = response.data.user;
+      } else if (response.data.userId) {
+        // Old format with userId - create a minimal user object
+        userData = {
+          id: response.data.userId,
+          email: formData.email, // Use the email from the form
+          name: formData.name, // Use the name from the form
+        };
+      } else {
+        console.error("No user data found in response:", response.data);
+        toast.error("Invalid response from server");
+        return;
+      }
+
       localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      localStorage.setItem("user", JSON.stringify(userData));
 
       console.log("Sign up successful:", response.data);
       toast.success("Sign up successful!");
 
       router.push("/dashboard");
-    } catch (error) {
-      toast.error("Error signing up. Please try again.");
+    } catch (error: any) {
       console.error("Sign up error:", error);
+
+      if (error.response) {
+        // Server responded with error status
+        console.error("Error response:", error.response.data);
+        toast.error(
+          error.response.data.message || "Error signing up. Please try again."
+        );
+      } else if (error.request) {
+        // Network error
+        console.error("Network error:", error.request);
+        toast.error("Network error. Please check your connection.");
+      } else {
+        // Other error
+        toast.error("Error signing up. Please try again.");
+      }
     }
   };
 

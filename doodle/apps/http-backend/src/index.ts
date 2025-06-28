@@ -15,7 +15,19 @@ const app = express();
 app.use(express.json());
 
 // More specific CORS configuration
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "https://droodle-frontend.onrender.com",
+      "https://droodle.vercel.app",
+      "https://droodle-git-main-yourusername.vercel.app",
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 // Remove global middleware
 // app.use(middleware);
@@ -64,10 +76,23 @@ app.post("/signup", async (req: Request, res: Response) => {
 
     console.log("User created successfully:", user.id);
 
+    // Generate JWT token
+    const token = jwt.sign(
+      {
+        userId: user.id,
+      },
+      JWT_SECRET
+    );
+
     res.status(201).json({
       success: true,
       message: "Account created successfully",
-      userId: user.id,
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+      },
     });
   } catch (e) {
     console.error("Database error:", e);
@@ -130,7 +155,11 @@ app.post("/signin", async (req: Request, res: Response) => {
     res.json({
       success: true,
       token,
-      userId: user.id,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+      },
     });
   } catch (error) {
     console.error("Signin error:", error);
