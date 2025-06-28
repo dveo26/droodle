@@ -145,6 +145,8 @@ export class Game {
   private updateStrokeWidths() {
     const baseStrokeWidth = 2;
     const scaledStrokeWidth = baseStrokeWidth / this.zoomLevel;
+    const baseFontSize = 20;
+    const scaledFontSize = baseFontSize / this.zoomLevel;
 
     this.fabricCanvas.getObjects().forEach((obj) => {
       if (
@@ -154,6 +156,9 @@ export class Game {
         obj instanceof fabric.Line
       ) {
         (obj as fabric.Object).set({ strokeWidth: scaledStrokeWidth });
+      } else if (obj instanceof fabric.IText) {
+        // Scale text font size inversely to zoom level
+        (obj as fabric.IText).set({ fontSize: scaledFontSize });
       }
     });
     this.fabricCanvas.requestRenderAll();
@@ -338,11 +343,14 @@ export class Game {
 
   private addText(e: fabric.IEvent<MouseEvent>) {
     const pointer = this.fabricCanvas.getPointer(e.e);
+    const baseFontSize = 20;
+    const scaledFontSize = baseFontSize / this.zoomLevel;
+
     const text = new fabric.IText("", {
       left: pointer.x,
       top: pointer.y,
       fill: "#ffffff",
-      fontSize: 20,
+      fontSize: scaledFontSize,
       selectable: true,
     });
 
@@ -476,11 +484,15 @@ export class Game {
         });
         return;
       } else if (shape.type === "text") {
+        const baseFontSize = 20;
+        const scaledFontSize =
+          (shape.fontSize || baseFontSize) / this.zoomLevel;
+
         obj = new fabric.IText(shape.text, {
           left: shape.left,
           top: shape.top,
           fill: "#ffffff",
-          fontSize: shape.fontSize,
+          fontSize: scaledFontSize,
           selectable: true,
         });
       }
