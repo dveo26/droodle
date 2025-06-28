@@ -85,7 +85,7 @@ export class Game {
       zoom *= 0.999 ** delta;
 
       // Limit zoom between 0.1 and 5
-      zoom = Math.min(Math.max(0.1, zoom), 5);
+      zoom = Math.min(Math.max(0.01, zoom), 10);
 
       // Get mouse position
       const mouseX = opt.e.offsetX;
