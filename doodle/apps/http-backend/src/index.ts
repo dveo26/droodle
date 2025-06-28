@@ -19,6 +19,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
+      "https://droodle-draw.onrender.com",
       "https://droodle-frontend.onrender.com",
       "https://droodle.vercel.app",
       "https://droodle-git-main-yourusername.vercel.app",
@@ -31,6 +32,15 @@ app.use(
 
 // Remove global middleware
 // app.use(middleware);
+
+// Health check endpoint
+app.get("/health", (req: Request, res: Response) => {
+  res.json({
+    success: true,
+    message: "Backend is running",
+    timestamp: new Date().toISOString(),
+  });
+});
 
 // FIXED SIGNUP ENDPOINT
 app.post("/signup", async (req: Request, res: Response) => {

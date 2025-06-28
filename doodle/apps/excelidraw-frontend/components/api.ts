@@ -40,6 +40,12 @@ api.interceptors.response.use(
       status: error.response?.status,
       data: error.response?.data,
       message: error.message,
+      code: error.code,
+      config: {
+        url: error.config?.url,
+        baseURL: error.config?.baseURL,
+        method: error.config?.method,
+      },
     });
     return Promise.reject(error);
   }
