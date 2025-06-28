@@ -64,18 +64,22 @@ export default function SignInForm() {
       toast.success("Sign in successful!");
 
       router.push("/dashboard");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Sign in error:", error);
 
-      if (error.response) {
+      if (error && typeof error === "object" && "response" in error) {
         // Server responded with error status
-        console.error("Error response:", error.response.data);
+        const axiosError = error as {
+          response: { data: { message?: string } };
+        };
+        console.error("Error response:", axiosError.response.data);
         toast.error(
-          error.response.data.message || "Error signing in. Please try again."
+          axiosError.response.data.message ||
+            "Error signing in. Please try again."
         );
-      } else if (error.request) {
+      } else if (error && typeof error === "object" && "request" in error) {
         // Network error
-        console.error("Network error:", error.request);
+        console.error("Network error:", error);
         toast.error("Network error. Please check your connection.");
       } else {
         // Other error
