@@ -199,12 +199,101 @@ export class Game {
         });
         break;
       case "pencil":
-        this.fabricCanvas.isDrawingMode = true;
-        this.fabricCanvas.freeDrawingBrush = new fabric.PencilBrush(
-          this.fabricCanvas
-        );
-        this.fabricCanvas.freeDrawingBrush.color = "#ffffff";
-        this.fabricCanvas.freeDrawingBrush.width = 2 / this.zoomLevel;
+        // Disable drawing mode initially
+        this.fabricCanvas.isDrawingMode = false;
+
+        // Enable selection for all objects
+        this.fabricCanvas.getObjects().forEach((obj) => {
+          obj.selectable = true;
+        });
+
+        // Add custom pencil drawing logic
+        let isDrawing = false;
+        let currentPath: fabric.Path | null = null;
+
+        this.fabricCanvas.on("mouse:down", (e) => {
+          const pointer = this.fabricCanvas.getPointer(e.e);
+          const objects = this.fabricCanvas.getObjects();
+
+          // Check if we clicked on an existing object
+          const clickedObject = objects.find((obj) => {
+            if (
+              obj.left !== undefined &&
+              obj.top !== undefined &&
+              obj.width !== undefined &&
+              obj.height !== undefined
+            ) {
+              return (
+                pointer.x >= obj.left &&
+                pointer.x <= obj.left + obj.width &&
+                pointer.y >= obj.top &&
+                pointer.y <= obj.top + obj.height
+              );
+            }
+            return false;
+          });
+
+          // If clicking on empty space, start drawing
+          if (!clickedObject) {
+            isDrawing = true;
+            const strokeWidth = 2 / this.zoomLevel;
+
+            // Create a new path for drawing
+            currentPath = new fabric.Path(`M ${pointer.x} ${pointer.y}`, {
+              stroke: "#ffffff",
+              strokeWidth: strokeWidth,
+              fill: "transparent",
+              selectable: false,
+            });
+
+            this.fabricCanvas.add(currentPath);
+            this.fabricCanvas.setActiveObject(currentPath);
+          }
+        });
+
+        this.fabricCanvas.on("mouse:move", (e) => {
+          if (isDrawing && currentPath) {
+            const pointer = this.fabricCanvas.getPointer(e.e);
+            const pathData = currentPath.path as any[];
+            pathData.push(["L", pointer.x, pointer.y]);
+            currentPath.set({ path: pathData });
+            this.fabricCanvas.requestRenderAll();
+          }
+        });
+
+        this.fabricCanvas.on("mouse:up", (e) => {
+          if (isDrawing && currentPath) {
+            // Finish drawing
+            isDrawing = false;
+            currentPath.set({ selectable: true });
+
+            // Send the path data
+            const pathData = currentPath.path;
+            if (pathData) {
+              const pathShape: Shape = {
+                type: "pencil",
+                path: pathData.toString(),
+              };
+              console.log("Sending path shape:", pathShape);
+              this.socket.send(
+                JSON.stringify({
+                  type: "chat",
+                  message: JSON.stringify({ shape: pathShape }),
+                  roomId: this.roomId,
+                })
+              );
+            }
+
+            currentPath = null;
+
+            // Automatically switch to pointer tool after drawing
+            this.selectedTool = "pointer";
+            if (this.onToolChange) {
+              this.onToolChange("pointer");
+            }
+            this.setTool("pointer");
+          }
+        });
         break;
       case "rect":
       case "circle":
@@ -333,7 +422,7 @@ export class Game {
       );
     }
 
-    // Switch to pointer tool after drawing
+    // Automatically switch to pointer tool after drawing
     this.selectedTool = "pointer";
     if (this.onToolChange) {
       this.onToolChange("pointer");
@@ -342,7 +431,33 @@ export class Game {
   }
 
   private addText(e: fabric.IEvent<MouseEvent>) {
+    // Check if we clicked on an existing object
     const pointer = this.fabricCanvas.getPointer(e.e);
+
+    // Check if we clicked on any existing object
+    const objects = this.fabricCanvas.getObjects();
+    const clickedObject = objects.find((obj) => {
+      if (
+        obj.left !== undefined &&
+        obj.top !== undefined &&
+        obj.width !== undefined &&
+        obj.height !== undefined
+      ) {
+        return (
+          pointer.x >= obj.left &&
+          pointer.x <= obj.left + obj.width &&
+          pointer.y >= obj.top &&
+          pointer.y <= obj.top + obj.height
+        );
+      }
+      return false;
+    });
+
+    // If we clicked on an existing object, don't create new text
+    if (clickedObject) {
+      return;
+    }
+
     const baseFontSize = 20;
     const scaledFontSize = baseFontSize / this.zoomLevel;
 
@@ -357,6 +472,13 @@ export class Game {
     this.fabricCanvas.add(text);
     this.fabricCanvas.setActiveObject(text);
     text.enterEditing();
+
+    // Automatically switch to pointer tool after adding text
+    this.selectedTool = "pointer";
+    if (this.onToolChange) {
+      this.onToolChange("pointer");
+    }
+    this.setTool("pointer");
   }
 
   private shapeToPayload(obj: fabric.Object): Shape | null {
