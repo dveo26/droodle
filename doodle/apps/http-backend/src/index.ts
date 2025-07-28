@@ -18,10 +18,12 @@ app.use(express.json());
 app.use(
   cors({
     origin: [
-      
-    
-     "https://droodle-frontend.onrender.com",
-     
+      "http://localhost:3000",
+      "https://droodle.onrender.com",
+      "https://droodle-draw.onrender.com",
+      "https://droodle-frontend.onrender.com",
+      "https://droodle.vercel.app",
+      "https://droodle-git-main-yourusername.vercel.app",
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
