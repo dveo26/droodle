@@ -84,7 +84,7 @@ export class Game {
       let zoom = this.fabricCanvas.getZoom();
       zoom *= 0.999 ** delta;
 
-      // Limit zoom between 0.1 and 5
+      // Limit zoom between 0.1 and 10
       zoom = Math.min(Math.max(0.01, zoom), 10);
 
       // Get mouse position
@@ -431,7 +431,7 @@ export class Game {
   }
 
   private addText(e: fabric.IEvent<MouseEvent>) {
-    // Check if we clicked on an existing object
+    
     const pointer = this.fabricCanvas.getPointer(e.e);
 
     // Check if we clicked on any existing object

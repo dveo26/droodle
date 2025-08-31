@@ -33,13 +33,7 @@ app.use(
 // app.use(middleware);
 
 // Health check endpoint
-app.get("/health", (req: Request, res: Response) => {
-  res.json({
-    success: true,
-    message: "Backend is running",
-    timestamp: new Date().toISOString(),
-  });
-});
+
 
 // FIXED SIGNUP ENDPOINT
 app.post("/signup", async (req: Request, res: Response) => {

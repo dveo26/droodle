@@ -21,16 +21,7 @@ export default function SignInForm() {
     e.preventDefault();
     console.log("Signing in with:", formData);
 
-    // Test backend connectivity first
-    try {
-      console.log("Testing backend connectivity...");
-      const healthResponse = await api.get("/health");
-      console.log("Backend health check:", healthResponse.data);
-    } catch (healthError) {
-      console.error("Backend health check failed:", healthError);
-      toast.error("Cannot connect to server. Please try again later.");
-      return;
-    }
+    
 
     try {
       const response = await api.post("/signin", formData);
