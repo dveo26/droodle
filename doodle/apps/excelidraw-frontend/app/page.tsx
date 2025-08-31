@@ -45,7 +45,7 @@ function App() {
               </h1>
               <p className="mt-6 text-lg sm:text-xl text-muted-foreground">
                 Create, collaborate, and share beautiful diagrams and sketches
-                with our intuitive drawing tool. No sign-up required.
+                with our intuitive drawing tool.
               </p>
               <div className="mt-10 flex items-center justify-center gap-x-4 flex-wrap">
                 <Link href="/signin">
